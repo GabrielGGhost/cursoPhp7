@@ -29,7 +29,7 @@ class Sql extends PDO{
 
 		$this->setParams($stmt, $stmt);
 
-		$stmt->execute();
+		$stmt->execute($params);
 
 		return $stmt;
 
