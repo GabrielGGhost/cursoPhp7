@@ -11,7 +11,7 @@ class Usuario {
 		return $this->idUsuario;
 	}
 	public function setIdUsuario($idUsuario){
-		return $this->idUsuario;
+		$this->idUsuario = $idUsuario;
 	}
 
 
@@ -19,7 +19,7 @@ class Usuario {
 		return $this->desLogin;
 	}
 	public function setDesLogin($desLogin){
-		return $this->DesLogin;
+		$this->desLogin = $desLogin;
 	}
 
 
@@ -27,7 +27,7 @@ class Usuario {
 		return $this->desSenha;
 	}
 	public function setDesSenha($desSenha){
-		return $this->desSenha;
+		$this->desSenha = $desSenha;
 	}
 
 
@@ -35,31 +35,67 @@ class Usuario {
 		return $this->dtCadastro;
 	}
 	public function setDtCadastro($dtCadastro){
-		return $this->dtCadastro;
+		$this->dtCadastro = $dtCadastro;
 	}
 
+	public static function search($login){
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios WHERE desLogin LIKE concat('%' , :SEARCH, '%')", array(
+			":SEARCH"=>$login));
+	}
+
+	public static function getList(){
+
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios");
+	}
+
+	public function login($login, $password){
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_usuarios WHERE desLogin = :LOGIN AND desSenha = :PASSWORD", array(
+			":LOGIN"=>$login,
+			":PASSWORD"=>$password));
+
+		if(count($results) > 0){
+
+			$row = $results[0];
+			$this->setIdUsuario($row["id_usuario"]);
+			$this->setDesLogin($row["desLogin"]);
+			$this->setDesSenha($row["desSenha"]);
+			$this->setDtCadastro(new DateTime($row["dtCadastro"]));
+		} else
+		{
+			throw new Exception("Login ou senha incorretos");
+		}
+
+	}
 
 	public function loadById($id){
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT *  FROM tb_usuarios WHERE idUsuario = :ID", array(
+		$results = $sql->select("SELECT *  FROM tb_usuarios WHERE id_usuario = :ID", array(
 			":ID"=> $id
 		));
 
 		if(count($results) > 0){
 
 			$row = $results[0];
-
-			$this->setIdUsuario($row['idUsuario']);
-			$this->setDesLogin($row['desLogin']);
-			$this->setDesSenha($row['desSenha']);
-			$this->setDtCadastro(new DateTime($row['dtCadastro']));
+			$this->setIdUsuario($row["id_usuario"]);
+			$this->setDesLogin($row["desLogin"]);
+			$this->setDesSenha($row["desSenha"]);
+			$this->setDtCadastro(new DateTime($row["dtCadastro"]));
 		}
 	}
 
 	public function __toString(){
 		return json_encode(array(
-			"idUsuário"=>$this->getIdUsuario()
+			"ID do Usuario: "=>$this->getIdUsuario(),
+			"Login: " =>$this->getDesLogin(),
+			"Senha: " =>$this->getDesSenha(),
+			"Data de cadastro: " =>$this->getDtCadastro()
 		));
 	}
 }
