@@ -15,10 +15,28 @@ require_once("config.php");
 // $search = Usuario::search("Gabriel");
 // echo json_encode($search);
 
-$user = new Usuario();
+//Fazer login
+// $user = new Usuario();
+// $user->login("Gabriel Artioli","Senha1234567");
+// echo $user;
 
-$user->login("Gabriel Artioli","Senha1234567");
+//Insere um novo usuário
+// $aluno = new Usuario();
+// $aluno->setDeslogin("Aluno");
+// $aluno->setDesSenha("@aluno");
+// $aluno->insert();
+// echo $aluno;
 
-echo $user;
+// Insere um novo usuário mais facilmente
+// $aluno = new Usuario("Joaozinho", "987654321");
+// $aluno->insert();
+// echo $aluno;
 
+$aluno = new Usuario();
+
+$aluno->loadById(7);
+
+$aluno->update("Joao", "senhaCerta");
+
+echo $aluno;
 ?>
